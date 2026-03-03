@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import { Database } from 'bun:sqlite';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
@@ -78,17 +78,17 @@ const runMigrations = () => {
 
     if (!columnNames.includes('git_name')) {
       console.log('Running migration: Adding git_name column');
-      db.exec('ALTER TABLE users ADD COLUMN git_name TEXT');
+      db.run('ALTER TABLE users ADD COLUMN git_name TEXT');
     }
 
     if (!columnNames.includes('git_email')) {
       console.log('Running migration: Adding git_email column');
-      db.exec('ALTER TABLE users ADD COLUMN git_email TEXT');
+      db.run('ALTER TABLE users ADD COLUMN git_email TEXT');
     }
 
     if (!columnNames.includes('has_completed_onboarding')) {
       console.log('Running migration: Adding has_completed_onboarding column');
-      db.exec('ALTER TABLE users ADD COLUMN has_completed_onboarding BOOLEAN DEFAULT 0');
+      db.run('ALTER TABLE users ADD COLUMN has_completed_onboarding BOOLEAN DEFAULT 0');
     }
 
     console.log('Database migrations completed successfully');
@@ -102,7 +102,7 @@ const runMigrations = () => {
 const initializeDatabase = async () => {
   try {
     const initSQL = fs.readFileSync(INIT_SQL_PATH, 'utf8');
-    db.exec(initSQL);
+    db.run(initSQL);
     console.log('Database initialized successfully');
     runMigrations();
   } catch (error) {
